@@ -45,10 +45,25 @@ tar -czf "$BK_DIR/data-$STAMP.tar.gz" -C "$APP_DIR" \
   config/config.php \
   2>/dev/null || true
 
-# ── 3) Rotación: conservar solo los últimos $KEEP de cada tipo ──
+# ── 3) Rotación local: conservar solo los últimos $KEEP de cada tipo ──
 for prefix in db data; do
   ls -1t "$BK_DIR/$prefix"-*.gz 2>/dev/null | tail -n +$((KEEP+1)) | xargs -r rm -f
 done
+
+# ── 4) Copia FUERA del servidor: Google Drive (si ya está configurado) ──
+RCLONE="/home/jacks/bin/rclone"
+RCONF="/home/jacks/.config/rclone/rclone.conf"
+GDRIVE_DIR="gdrive:Respaldos/JacksTacoRock"
+if [ -x "$RCLONE" ] && "$RCLONE" --config "$RCONF" listremotes 2>/dev/null | grep -q '^gdrive:'; then
+  echo "[$(date '+%F %T')] Subiendo a Google Drive ($GDRIVE_DIR)…"
+  "$RCLONE" --config "$RCONF" copy "$BK_DIR/db-$STAMP.sql.gz"   "$GDRIVE_DIR/" && \
+  "$RCLONE" --config "$RCONF" copy "$BK_DIR/data-$STAMP.tar.gz" "$GDRIVE_DIR/" && \
+    echo "   ✔ Subido a Drive"
+  # Rotación en Drive: borrar respaldos con más de $KEEP días
+  "$RCLONE" --config "$RCONF" delete "$GDRIVE_DIR/" --min-age "${KEEP}d" 2>/dev/null || true
+else
+  echo "[$(date '+%F %T')] (Google Drive aún no conectado — respaldo solo local)"
+fi
 
 echo "[$(date '+%F %T')] ✔ Respaldo listo:"
 echo "   $BK_DIR/db-$STAMP.sql.gz  ($(du -h "$BK_DIR/db-$STAMP.sql.gz" | cut -f1))"
