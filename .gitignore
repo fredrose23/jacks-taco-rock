@@ -1,0 +1,30 @@
+# ─────────── Secretos / configuración local (NO subir) ───────────
+# Contienen la contraseña de la base de datos.
+/config/config.php
+/config/config.php.linux
+
+# ─────────── Runtime / triggers ───────────
+/config/.sse-trigger
+/config/.web-trigger
+
+# ─────────── Logs ───────────
+/logs/
+*.log
+
+# ─────────── Contenido subido por usuarios (va al RESPALDO, no a git) ───────────
+# Imágenes de productos que suben desde el panel. Se respaldan aparte.
+/assets/img/products/
+
+# ─────────── Dumps / respaldos de datos (sensibles) ───────────
+/sql/*backup*.sql
+/sql/backup_antes_reset.sql
+*.sql.gz
+*.sql.zip
+
+# ─────────── Varios ───────────
+/demo.rar
+/.claude/
+.DS_Store
+Thumbs.db
+*.swp
+*~

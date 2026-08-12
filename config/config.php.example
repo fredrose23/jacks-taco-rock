@@ -1,0 +1,46 @@
+<?php
+/**
+ * PLANTILLA de configuración. En el servidor:
+ *   cp config/config.php.example config/config.php
+ * y llena los datos reales (contraseña de la BD, etc.).
+ *
+ * El archivo real config/config.php NO se sube a git (está en .gitignore)
+ * porque contiene la contraseña de la base de datos.
+ */
+
+// ---------- Base de datos ----------
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'jacks_rock');
+define('DB_USER', 'jacks_app');
+define('DB_PASS', 'CAMBIA_ESTA_CONTRASENA');   // <-- poner la contraseña real
+define('DB_CHARSET', 'utf8mb4');
+
+// ---------- App ----------
+define('APP_NAME',   "Jacks Taco Rock");
+define('APP_SLOGAN', "Todo al carbón");
+define('APP_URL',    '');
+define('SYS_URL',    APP_URL . '/sistema');
+define('TAX_RATE',   0);
+define('TIMEZONE',   'America/Mexico_City');
+
+function asset_v(string $relPath): string {
+    $abs = __DIR__ . '/../' . ltrim($relPath, '/');
+    return file_exists($abs) ? (string)filemtime($abs) : (string)time();
+}
+function logo_url(): string {
+    return APP_URL . '/assets/img/logo.png?v=' . asset_v('assets/img/logo.png');
+}
+
+// ---------- Errores ----------
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../logs/php-error.log');
+
+date_default_timezone_set(TIMEZONE);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../includes/error_handler.php';

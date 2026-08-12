@@ -1,0 +1,29 @@
+DirectoryIndex index.php
+
+# Forzar UTF-8 en TODA respuesta HTML/JSON/JS/CSS
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .html .php .js .css .json
+
+# Bloquear acceso directo a includes/config/sql
+RewriteEngine On
+RewriteRule ^(config|includes|sql)/ - [F,L]
+
+# Bloquear acceso al repositorio git, deploy y otros archivos sensibles
+RewriteRule ^\.git - [F,L]
+RewriteRule ^(deploy)/ - [F,L]
+RewriteRule (^|/)\.(git|env)($|/) - [F,L]
+RewriteRule \.(sh|sql|gz|rar)$ - [F,L]
+
+# Deshabilitar listado de directorios
+Options -Indexes
+
+# ERROR 006: subir el límite de subida de archivos (el default de 2M rechazaba
+# imágenes de ~2.8 MB antes de llegar al código). Ahora hasta 12 MB.
+<IfModule mod_php.c>
+  php_value upload_max_filesize 12M
+  php_value post_max_size 16M
+</IfModule>
+<IfModule mod_php8.c>
+  php_value upload_max_filesize 12M
+  php_value post_max_size 16M
+</IfModule>
