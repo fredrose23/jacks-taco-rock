@@ -135,6 +135,10 @@ function group_contains_active(array $items, string $active): bool {
       </div>
     </div>
     <a href="<?= SYS_URL ?>/logout.php" class="logout-link">⎋ Cerrar sesión</a>
+    <a href="<?= SYS_URL ?>/index.php?module=changelog" class="version-link"
+       title="Ver historial de versiones">
+      <?= e(defined('APP_NAME') ? APP_NAME : 'Sistema') ?> v<?= e(defined('APP_VERSION') ? APP_VERSION : '1.0.0') ?>
+    </a>
   </div>
 </aside>
 

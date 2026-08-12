@@ -14,6 +14,16 @@ require_login();
 $module = $_GET['module'] ?? null;
 $sub    = $_GET['sub'] ?? null;
 
+// Changelog (historial de versiones): página informativa accesible para
+// cualquier usuario logueado, sin necesidad de turno ni permisos de rol.
+if ($module === 'changelog') {
+    include ROOT_DIR . '/includes/header.php';
+    include ROOT_DIR . '/includes/sidebar.php';
+    include ROOT_DIR . '/modules/changelog.php';
+    include ROOT_DIR . '/includes/footer.php';
+    exit;
+}
+
 $allowed = ['tables','menu','orders','kitchen','reports','inventory','cash','tips','reservations','system',
             'dashboard','my_shift','delivery','clients','closures','tickets','takeout','web_orders'];
 

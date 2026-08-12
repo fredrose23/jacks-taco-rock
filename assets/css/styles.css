@@ -419,6 +419,8 @@ main { overflow-y: auto; }
 .role-tag.role-cajero { background: var(--green); color: #000; }
 .logout-link { display: block; text-align: center; color: var(--muted); font-size: 12px; padding: 8px; border-radius: 6px; transition: background .15s; }
 .logout-link:hover { background: var(--panel-2); color: var(--red); }
+.version-link { display: block; text-align: center; color: var(--muted); opacity: .7; font-size: 11px; padding: 6px; margin-top: 2px; text-decoration: none; transition: color .15s, opacity .15s; }
+.version-link:hover { color: var(--accent); opacity: 1; text-decoration: underline; }
 
 /* ============ COMENSALES ============ */
 .comensal-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 8px; background: var(--panel-2); border-radius: 8px; }
