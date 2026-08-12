@@ -8,6 +8,14 @@
  */
 $CHANGELOG = [
     [
+        'v' => '1.0.1', 'fecha' => '2026-08-11', 'cambios' => [
+            ['tipo' => 'Arreglo', 'texto' => '<b>Cocina ya no acumula órdenes viejas:</b> al cobrar (o cerrar el día) las comandas pasan a "servida" y cocina solo muestra órdenes <b>abiertas</b>. Se limpiaron 946 comandas atoradas.'],
+            ['tipo' => 'Mejora', 'texto' => '<b>Alerta de impresión de comandas:</b> al enviar a cocina se muestra si imprimió ✓ o falló ✗ en cada cocina, con botón para <b>reimprimir</b> (útil si se acaba el rollo o sale incompleta).'],
+            ['tipo' => 'Mejora', 'texto' => 'Al enviar a cocina, si todo imprimió, <b>regresa solo a Mesas</b> (para todos los tipos: mesa, llevar, domicilio, web).'],
+            ['tipo' => 'Mejora', 'texto' => 'Botones del pedido <b>más grandes</b> y agrupados; los checkbox de "sin imprimir" ahora son controles grandes y separados para no picar otro botón por error.'],
+        ],
+    ],
+    [
         'v' => '1.0.0', 'fecha' => '2026-08-11', 'cambios' => [
             ['tipo' => 'Nuevo', 'texto' => 'Se estableció el <b>versionado del sistema</b> (semántico MAYOR.MENOR.PARCHE) con este historial de versiones, accesible desde el menú.'],
             ['tipo' => 'Nuevo', 'texto' => '<b>Respaldos automáticos diarios</b> de la base de datos y las imágenes (con rotación de 14 días).'],

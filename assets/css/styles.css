@@ -226,7 +226,21 @@ main { overflow-y: auto; }
 .cart-summary { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; display: flex; flex-direction: column; gap: 6px; }
 .cart-summary .row { display: flex; justify-content: space-between; color: var(--muted); }
 .cart-summary .total-row { font-size: 18px; color: var(--accent-2); font-weight: 700; margin-top: 4px; font-family: 'Bungee', sans-serif; }
-.cart-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.cart-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+/* Botones grandes (acciones principales) — más fáciles de picar */
+.btn-lg { font-size: 17px; padding: 16px 18px; font-weight: 700; }
+/* Checkbox GRANDE como control separado (para no picar botones vecinos por error) */
+.chk-big { display: flex; align-items: center; gap: 12px; justify-content: center;
+  font-size: 14px; color: var(--muted); padding: 12px 14px; margin: 2px 0;
+  border: 1px dashed var(--border); border-radius: 10px; cursor: pointer; user-select: none; }
+.chk-big:hover { background: var(--panel-2); }
+.chk-big input[type="checkbox"] { width: 26px; height: 26px; transform: scale(1.15);
+  accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.chk-big b { color: var(--tx, inherit); }
+/* Acciones secundarias: agrupadas en 2 columnas, separadas de las principales */
+.cart-actions-secondary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
+.cart-actions-secondary .btn { font-size: 13px; padding: 13px 10px; }
 .btn { padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: opacity .15s, transform .1s; }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }

@@ -65,8 +65,10 @@ return [
                    u.nombre AS mesero
             FROM comandas c
             JOIN mesas m ON m.id = c.mesa_id
+            JOIN ordenes o ON o.id = c.orden_id
             LEFT JOIN usuarios u ON u.id = c.usuario_id
             WHERE c.estado IN ('nueva','preparando','lista')
+              AND o.estado = 'abierta'
         ";
         $params = [];
         if ($cocina) { $sql .= " AND c.cocina = ?"; $params[] = $cocina; }
@@ -142,9 +144,10 @@ return [
 
     'count' => function () {
         $cocina = isset($_GET['cocina']) ? (int)$_GET['cocina'] : 0;
-        $sql = "SELECT COUNT(*) FROM comandas WHERE estado IN ('nueva','preparando','lista')";
+        $sql = "SELECT COUNT(*) FROM comandas c JOIN ordenes o ON o.id=c.orden_id
+                WHERE c.estado IN ('nueva','preparando','lista') AND o.estado='abierta'";
         $params = [];
-        if ($cocina) { $sql .= " AND cocina = ?"; $params[] = $cocina; }
+        if ($cocina) { $sql .= " AND c.cocina = ?"; $params[] = $cocina; }
         $stmt = db()->prepare($sql);
         $stmt->execute($params);
         json_response(['count' => (int)$stmt->fetchColumn()]);

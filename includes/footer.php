@@ -38,12 +38,12 @@
       <div class="row"><span>Pagado</span><span id="payPaid">$0.00</span></div>
       <div class="row diff" id="payDiffRow"><span id="payDiffLbl">Falta</span><span id="payDiff">$0.00</span></div>
     </div>
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:8px;">
+    <label class="chk-big" style="margin-top:10px;">
       <input type="checkbox" id="chkSinTicket"> Cobrar <b>sin imprimir</b> ticket
     </label>
-    <div class="modal-actions">
+    <div class="modal-actions" style="margin-top:14px;gap:12px;">
       <button class="btn btn-ghost" id="payCancel">Cancelar</button>
-      <button class="btn btn-success" id="payConfirm" disabled>Confirmar pago</button>
+      <button class="btn btn-success btn-lg" id="payConfirm" disabled>Confirmar pago</button>
     </div>
   </div>
 </div>
@@ -56,6 +56,7 @@
     <div id="comandaPreview" class="comandas-grid"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" id="comandaClose">Cerrar</button>
+      <button class="btn btn-success" id="comandaGoTables" style="display:none;font-size:16px;padding:14px 20px;">✓ Todo bien · Volver a Mesas</button>
     </div>
   </div>
 </div>

@@ -496,6 +496,10 @@ return [
             }
 
             $pdo->prepare("UPDATE ordenes SET estado='cobrada', cerrada_at=NOW() WHERE id=?")->execute([$orden_id]);
+            // Al cobrar, las comandas de esa orden se dan por SERVIDAS (para que no
+            // se queden acumuladas en la pantalla de cocina).
+            $pdo->prepare("UPDATE comandas SET estado='servida', servida_at=NOW()
+                           WHERE orden_id=? AND estado IN ('nueva','preparando','lista')")->execute([$orden_id]);
             // Domicilio cobrado en caja: cerrar también la entrega para que NO se
             // quede atorado en 'en_camino'/'asignada' en el tablero de reparto.
             if (($o['tipo'] ?? '') === 'domicilio'

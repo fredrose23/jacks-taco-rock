@@ -1046,32 +1046,19 @@ function bindOrderActions() {
       const sinImprimir = !!document.getElementById('chkSinImprimir')?.checked;
       const res = await API.post('ordenes/send_kitchen', { orden_id: ORDER_STATE.orden.id, sin_imprimir: sinImprimir });
       const impreso = res.impreso || {};
-      // Con "sin imprimir" no hay impresión que validar → no se cuenta como fallo.
-      const algunFallo = !sinImprimir && (res.comandas || []).some(c => impreso[c.cocina] === false);
       refreshKitchenBadge();
-      const esLocal = (ORDER_STATE.orden.tipo || 'local').toLowerCase() === 'local';
+      // Regreso a Mesas (aplica a TODOS los tipos: local, llevar, domicilio, web).
+      const goTables = () => { location.href = `${APP.sysUrl}/index.php?module=tables`; };
 
-      // Si alguna cocina NO imprimió, mostramos el modal para reimprimir (no redirige).
-      if (algunFallo) {
-        showComandas(res.comandas, impreso);
-        toast('Enviado, pero una cocina no imprimió — usa “Reimprimir”', 'error');
-        await reloadOrder();
+      if (sinImprimir) {
+        toast('Enviado a cocina (sin imprimir)', 'success');
+        goTables();
         return;
       }
-      // Todo imprimió bien:
-      if (esLocal) {
-        // Pedido en mesa → volver a Mesas
-        location.href = `${APP.sysUrl}/index.php?module=tables`;
-      } else {
-        // Para llevar/domicilio → seguir en el pedido (normalmente se cobra en seguida)
-        const msg = {
-          'ambas':   '2 comandas enviadas · Cocina A + Cocina B',
-          'solo C1': 'Comanda enviada solo a Cocina A',
-          'solo C2': 'Comanda enviada solo a Cocina B',
-        }[res.caso] || 'Comanda enviada a cocina';
-        toast(msg, 'success');
-        await reloadOrder();
-      }
+      // SIEMPRE mostramos el modal con el estado de impresión de cada cocina y el
+      // botón de reimprimir (por si se acabó el rollo o no imprimió). Si todo
+      // imprimió, auto-regresa a Mesas; si algo falló, se queda hasta que actúen.
+      showComandas(res.comandas, impreso, goTables);
     } catch (e) { toast(e.message, 'error'); }
   };
   const goPayBtn = document.getElementById('goPay');
@@ -1198,14 +1185,14 @@ function buildComandaHtml(c) {
  *
  * @param {object} impreso  mapa {cocina: true|false} devuelto por el servidor
  */
-function showComandas(comandas, impreso = {}) {
+function showComandas(comandas, impreso = {}, onDone = null) {
   const preview = document.getElementById('comandaPreview');
   const subInfo = document.getElementById('comandaSub');
 
   const algunFallo = comandas.some(c => impreso[c.cocina] === false);
   subInfo.innerHTML = algunFallo
-    ? '⚠ <b>Una cocina no imprimió</b> (impresora apagada o sin red). Puedes reintentar con “Reimprimir”.'
-    : '✓ Impreso automáticamente en la impresora de cada cocina';
+    ? '⚠ <b>Una comanda NO se imprimió</b> — reimprímela antes de continuar (impresora apagada, sin red o sin rollo).'
+    : '✓ <b>Impreso.</b> Verifica que salieron completas; si se acabó el rollo o salió a medias, usa “Reimprimir”.';
 
   preview.innerHTML = comandas.map((c, idx) => {
     const ok = impreso[c.cocina] !== false;
@@ -1251,10 +1238,39 @@ function showComandas(comandas, impreso = {}) {
     };
   });
 
+  // Botón "Volver a Mesas": solo cuando venimos de enviar a cocina (onDone).
+  const goBtn = document.getElementById('comandaGoTables');
+  let countdownTimer = null;
+  const stopCountdown = () => { if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } };
+  const finish = () => { stopCountdown(); document.getElementById('comandaModal').classList.remove('open'); if (onDone) onDone(); };
+
+  if (goBtn) {
+    if (onDone) {
+      goBtn.style.display = '';
+      goBtn.onclick = finish;
+      if (!algunFallo) {
+        // Todo imprimió → auto-regreso a Mesas con cuenta regresiva (cancelable).
+        let secs = 8;
+        goBtn.textContent = `✓ Todo bien · Volver a Mesas (${secs})`;
+        countdownTimer = setInterval(() => {
+          secs--;
+          if (secs <= 0) { finish(); return; }
+          goBtn.textContent = `✓ Todo bien · Volver a Mesas (${secs})`;
+        }, 1000);
+      } else {
+        goBtn.textContent = '✓ Ya reimprimí · Volver a Mesas';
+      }
+    } else {
+      goBtn.style.display = 'none';
+    }
+  }
+  // Cualquier clic en "Reimprimir" cancela el auto-regreso (para revisar con calma).
+  preview.querySelectorAll('.print-comanda-btn').forEach(b => b.addEventListener('click', stopCountdown));
+
   // Bind del cierre aquí mismo para que funcione también fuera de la página de
   // pedidos (p. ej. al aceptar un pedido web desde el módulo de Pedidos web).
   const closeBtn = document.getElementById('comandaClose');
-  if (closeBtn) closeBtn.onclick = () => document.getElementById('comandaModal').classList.remove('open');
+  if (closeBtn) closeBtn.onclick = () => { stopCountdown(); document.getElementById('comandaModal').classList.remove('open'); };
 
   document.getElementById('comandaModal').classList.add('open');
 }

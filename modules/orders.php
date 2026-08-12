@@ -45,18 +45,23 @@ if (!$mesa_id && !$orden_id) {
         <button class="btn btn-ghost" id="btnPromo" style="margin-top:8px;font-size:12px;padding:6px;">🏷 Aplicar promoción / cupón</button>
       </div>
       <div class="cart-actions">
-        <button class="btn btn-primary" id="sendKitchen" disabled>Enviar a cocina · Imprimir comanda</button>
-        <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;justify-content:center;">
+        <!-- Acción principal: enviar a cocina -->
+        <button class="btn btn-primary btn-lg" id="sendKitchen" disabled>Enviar a cocina · Imprimir comanda</button>
+        <label class="chk-big">
           <input type="checkbox" id="chkSinImprimir"> Enviar <b>sin imprimir</b> comanda
         </label>
         <?php // ERROR 002/004: los meseros NO cobran; solo caja y admin ?>
         <?php if (in_array(current_user()['rol'], ['admin','cajero'])): ?>
-        <button class="btn btn-success" id="goPay" disabled>Cobrar</button>
+        <button class="btn btn-success btn-lg" id="goPay" disabled>💵 Cobrar</button>
         <?php endif; ?>
-        <button class="btn btn-ghost" id="btnMoveMesa" style="color:var(--blue);display:none;">🔁 Cambiar de mesa</button>
-        <button class="btn btn-ghost" id="btnFreeMesa" style="color:var(--red);display:none;">🔓 Liberar mesa (vacía)</button>
-        <button class="btn btn-ghost" id="btnChangeType" style="color:var(--accent-2);">🔄 Cambiar tipo de pedido</button>
-        <a class="btn btn-ghost" href="<?= SYS_URL ?>/index.php?module=tables">← Volver a mesas</a>
+
+        <!-- Acciones secundarias (agrupadas, separadas para no picarlas por error) -->
+        <div class="cart-actions-secondary">
+          <button class="btn btn-ghost" id="btnMoveMesa" style="color:var(--blue);display:none;">🔁 Cambiar de mesa</button>
+          <button class="btn btn-ghost" id="btnFreeMesa" style="color:var(--red);display:none;">🔓 Liberar mesa</button>
+          <button class="btn btn-ghost" id="btnChangeType" style="color:var(--accent-2);">🔄 Cambiar tipo</button>
+          <a class="btn btn-ghost" href="<?= SYS_URL ?>/index.php?module=tables">← Volver a mesas</a>
+        </div>
       </div>
     </div>
   </div>

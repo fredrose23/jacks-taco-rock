@@ -288,6 +288,10 @@ return [
               WHERE id=?")
                 ->execute([$propina, $turno_id, $orden_id]);
 
+            // Comandas de esta orden → servidas (limpiar pantalla de cocina)
+            $pdo->prepare("UPDATE comandas SET estado='servida', servida_at=NOW()
+                           WHERE orden_id=? AND estado IN ('nueva','preparando','lista')")->execute([$orden_id]);
+
             // Actualizar cliente
             $pdo->prepare("UPDATE clientes c
                 JOIN ordenes o ON o.cliente_id=c.id
