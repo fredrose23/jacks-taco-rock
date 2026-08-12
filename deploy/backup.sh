@@ -54,13 +54,18 @@ done
 RCLONE="/home/jacks/bin/rclone"
 RCONF="/home/jacks/.config/rclone/rclone.conf"
 GDRIVE_DIR="gdrive:Respaldos/JacksTacoRock"
+RC_FLAGS="--config $RCONF --timeout 60s --contimeout 20s --retries 2 --low-level-retries 3"
 if [ -x "$RCLONE" ] && "$RCLONE" --config "$RCONF" listremotes 2>/dev/null | grep -q '^gdrive:'; then
   echo "[$(date '+%F %T')] Subiendo a Google Drive ($GDRIVE_DIR)…"
-  "$RCLONE" --config "$RCONF" copy "$BK_DIR/db-$STAMP.sql.gz"   "$GDRIVE_DIR/" && \
-  "$RCLONE" --config "$RCONF" copy "$BK_DIR/data-$STAMP.tar.gz" "$GDRIVE_DIR/" && \
+  # Nota: si Drive falla, NO se aborta el respaldo (el local ya quedó). El "if"
+  # exenta estos comandos de 'set -e'.
+  if "$RCLONE" $RC_FLAGS copy "$BK_DIR/db-$STAMP.sql.gz" "$GDRIVE_DIR/" \
+     && "$RCLONE" $RC_FLAGS copy "$BK_DIR/data-$STAMP.tar.gz" "$GDRIVE_DIR/"; then
     echo "   ✔ Subido a Drive"
-  # Rotación en Drive: borrar respaldos con más de $KEEP días
-  "$RCLONE" --config "$RCONF" delete "$GDRIVE_DIR/" --min-age "${KEEP}d" 2>/dev/null || true
+    "$RCLONE" $RC_FLAGS delete "$GDRIVE_DIR/" --min-age "${KEEP}d" 2>/dev/null || true
+  else
+    echo "   ⚠ No se pudo subir a Drive (el respaldo LOCAL sí quedó guardado)"
+  fi
 else
   echo "[$(date '+%F %T')] (Google Drive aún no conectado — respaldo solo local)"
 fi
