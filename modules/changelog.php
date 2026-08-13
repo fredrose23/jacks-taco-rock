@@ -8,6 +8,11 @@
  */
 $CHANGELOG = [
     [
+        'v' => '1.0.3', 'fecha' => '2026-08-11', 'cambios' => [
+            ['tipo' => 'Mejora', 'texto' => '<b>Reimprimir desde la pantalla de cocina:</b> cada comanda tiene ahora un botón 🖨 Reimprimir, por si el personal perdió la comanda impresa.'],
+        ],
+    ],
+    [
         'v' => '1.0.2', 'fecha' => '2026-08-11', 'cambios' => [
             ['tipo' => 'Arreglo', 'texto' => '<b>Cocina ahora muestra TODOS los pedidos:</b> antes solo se veían los de mesa; los pedidos para <b>llevar, domicilio, web y mostrador</b> quedaban ocultos (no tienen mesa). Ya aparecen todos, con su tipo y cliente.'],
         ],

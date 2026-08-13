@@ -1607,9 +1607,8 @@ function kitchenButtonsByRole(c) {
     const label = rol === 'repartidor' ? '📤 Recogida' : '📤 Servida';
     btns.push(`<button class="btn btn-ghost" data-act="servida" data-id="${c.id}">${label}</button>`);
   }
-  if (!btns.length) {
-    btns.push(`<small style="color:var(--muted);font-size:11px;">Solo vista</small>`);
-  }
+  // Reimprimir la comanda desde cocina (por si el personal perdió la impresa).
+  btns.push(`<button class="btn btn-ghost" data-reprint="${c.id}" title="Reimprimir esta comanda">🖨 Reimprimir</button>`);
   return btns.join('');
 }
 
@@ -1779,6 +1778,17 @@ async function renderKitchen() {
         if (b.dataset.act === 'lista') toast(`Comanda lista para servir`, 'info');
         await renderKitchen();
         refreshKitchenBadge();
+      };
+    });
+    // Reimprimir comanda desde cocina (a la impresora de su cocina).
+    grid.querySelectorAll('button[data-reprint]').forEach(b => {
+      b.onclick = async () => {
+        b.disabled = true;
+        try {
+          const r = await API.post('ordenes/reprint_comanda', { comanda_id: +b.dataset.reprint });
+          toast(r && r.impreso ? '🖨 Comanda reenviada a la impresora' : 'La impresora no responde', r && r.impreso ? 'success' : 'error');
+        } catch (e) { toast(e.message, 'error'); }
+        b.disabled = false;
       };
     });
   } catch (e) {
