@@ -8,6 +8,11 @@
  */
 $CHANGELOG = [
     [
+        'v' => '1.0.2', 'fecha' => '2026-08-11', 'cambios' => [
+            ['tipo' => 'Arreglo', 'texto' => '<b>Cocina ahora muestra TODOS los pedidos:</b> antes solo se veían los de mesa; los pedidos para <b>llevar, domicilio, web y mostrador</b> quedaban ocultos (no tienen mesa). Ya aparecen todos, con su tipo y cliente.'],
+        ],
+    ],
+    [
         'v' => '1.0.1', 'fecha' => '2026-08-11', 'cambios' => [
             ['tipo' => 'Arreglo', 'texto' => '<b>Cocina ya no acumula órdenes viejas:</b> al cobrar (o cerrar el día) las comandas pasan a "servida" y cocina solo muestra órdenes <b>abiertas</b>. Se limpiaron 946 comandas atoradas.'],
             ['tipo' => 'Mejora', 'texto' => '<b>Alerta de impresión de comandas:</b> al enviar a cocina se muestra si imprimió ✓ o falló ✗ en cada cocina, con botón para <b>reimprimir</b> (útil si se acaba el rollo o sale incompleta).'],

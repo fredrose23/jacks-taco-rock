@@ -1712,6 +1712,18 @@ async function renderAvisosCocina() {
   } catch (e) { box.innerHTML = ''; }
 }
 
+// Título de la tarjeta de cocina: mesa para pedidos locales; tipo + cliente
+// para llevar/domicilio/mostrador (que no tienen mesa).
+function kitchenTitle(c) {
+  const t = (c.orden_tipo || 'local').toLowerCase();
+  if (t === 'local') return mesaLabel({ nombre: c.mesa_nombre, numero: c.mesa_numero });
+  const cli = c.cliente_nombre ? ' · ' + c.cliente_nombre : '';
+  if (t === 'domicilio') return '🛵 DOMICILIO' + cli;
+  if (t === 'mostrador') return '🥤 MOSTRADOR';
+  const hp = c.hora_pickup ? ' · 🕐 ' + String(c.hora_pickup).slice(0, 5) : '';
+  return '📦 PARA LLEVAR' + cli + hp;
+}
+
 async function renderKitchen() {
   const grid = document.getElementById('kitchenGrid');
   const empty = document.getElementById('kitchenEmpty');
@@ -1750,7 +1762,7 @@ async function renderKitchen() {
       card.innerHTML = `
         <div class="ticket-head">
           <div>
-            <h4>${mesaLabel({ nombre: c.mesa_nombre, numero: c.mesa_numero })} ${cocinaBadge}${(+c.ronda > 1) ? ` <span class="ronda-tag">RONDA ${c.ronda}</span>` : ''}</h4>
+            <h4>${kitchenTitle(c)} ${cocinaBadge}${(+c.ronda > 1) ? ` <span class="ronda-tag">RONDA ${c.ronda}</span>` : ''}</h4>
             <div class="ticket-status">${c.estado === 'nueva' ? 'Nueva' : c.estado === 'preparando' ? 'En preparación' : 'Lista'}</div>
           </div>
           <div class="time">Orden ${c.orden_id || '#'+String(c.id).padStart(3,'0')}<br>hace ${elapsed}m<br><small>${c.mesero||''}</small></div>

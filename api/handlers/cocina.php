@@ -59,12 +59,15 @@ return [
     'list' => function () {
         $pdo = db();
         $cocina = isset($_GET['cocina']) ? (int)$_GET['cocina'] : 0; // 0 = todas
+        // LEFT JOIN a mesas: los pedidos para llevar/domicilio/web NO tienen mesa
+        // (mesa_id NULL) y con un JOIN interno quedaban EXCLUIDOS de cocina.
         $sql = "
             SELECT c.id, c.orden_id, c.mesa_id, c.cocina, c.ronda, c.estado, c.created_at,
                    m.numero AS mesa_numero, m.nombre AS mesa_nombre, m.capacidad,
+                   o.tipo AS orden_tipo, o.cliente_nombre, o.hora_pickup,
                    u.nombre AS mesero
             FROM comandas c
-            JOIN mesas m ON m.id = c.mesa_id
+            LEFT JOIN mesas m ON m.id = c.mesa_id
             JOIN ordenes o ON o.id = c.orden_id
             LEFT JOIN usuarios u ON u.id = c.usuario_id
             WHERE c.estado IN ('nueva','preparando','lista')
