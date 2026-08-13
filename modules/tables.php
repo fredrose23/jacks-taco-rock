@@ -18,15 +18,15 @@
   ?>
   <?php if ($puedeLevantar): ?>
     <div class="quick-orders">
-      <button class="btn btn-primary" onclick="openTakeoutModal('llevar')">
+      <button class="btn qo-verde" onclick="openTakeoutModal('llevar')">
         📦 + Nuevo pedido <b>para llevar</b>
       </button>
-      <button class="btn btn-primary" onclick="openTakeoutModal('domicilio')">
+      <button class="btn qo-amarillo" onclick="openTakeoutModal('domicilio')">
         🛵 + Nuevo pedido <b>a domicilio</b>
       </button>
       <?php // ERROR 005: la venta rápida (mostrador) NO es para meseros ?>
       <?php if (in_array($rol, ['admin','cajero'])): ?>
-      <button class="btn btn-success" onclick="startMostrador()">
+      <button class="btn qo-rojo" onclick="startMostrador()">
         🥤 + <b>Venta rápida</b> (mostrador)
       </button>
       <?php endif; ?>

@@ -1864,3 +1864,12 @@ textarea.inv-input { resize: vertical; min-height: 60px; }
 
 /* ====== Etiqueta de RONDA (tanda) en pantalla de cocina ====== */
 .ronda-tag { display:inline-block; background:var(--purple); color:#fff; font-size:11px; font-weight:800; padding:1px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+
+/* === Botones rastafari en Mesas (🟢 llevar · 🟡 domicilio · 🔴 venta rápida) === */
+.quick-orders .btn { border: none; color: #fff; transition: filter .15s, transform .1s; }
+.quick-orders .btn:hover { filter: brightness(1.08); }
+.quick-orders .btn:active { transform: scale(0.98); }
+.qo-verde    { background: #21a038; }
+.qo-amarillo { background: #f0b429; color: #1a1a1a; }
+.qo-amarillo b { color: #1a1a1a; }
+.qo-rojo     { background: #e02424; }
